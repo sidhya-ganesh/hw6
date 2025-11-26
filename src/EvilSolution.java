@@ -1,40 +1,51 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
-/**
- * EvilSolution maintains a set of possible target words of the same length and
- * a partially revealed solution. On each guess, it partitions the candidate
- * words into "word families" based on the positions of the guessed letter and
- * chooses the family that keeps the largest number of options.
- */
 public class EvilSolution {
 
-    /** All remaining candidate words consistent with guesses so far. */
+    /** Current set of possible target words (all the same length). */
     private ArrayList<String> candidates;
 
-    /** Partially revealed solution, with '_' for unknown positions. */
+    /** The partially revealed solution, using '_' for unknown characters. */
     private ArrayList<Character> partialSolution;
 
-    /** Count of characters still not revealed. */
+    /** Number of characters in the word that have not yet been revealed. */
     private int missingChars;
 
     /**
-     * Constructs a new EvilSolution given an initial list of candidate words.
-     * All words are assumed to have the same length.
+     * Constructs a new EvilSolution from an initial list of words.
+     * The list may contain words of many different lengths.
+     * This constructor will:
+     *   1) Choose a random word from the list.
+     *   2) Use that word's length as the chosen length.
+     *   3) Keep only words of that length as the candidate set.
      */
     public EvilSolution(ArrayList<String> wordList) {
         if (wordList == null || wordList.isEmpty()) {
             throw new IllegalArgumentException("Word list must be non-empty");
         }
 
-        this.candidates = new ArrayList<>(wordList);
-        int length = candidates.get(0).length();
+        // 1) Pick a random word -> its length becomes the chosen length.
+        Random rand = new Random();
+        String randomWord = wordList.get(rand.nextInt(wordList.size()));
+        int chosenLength = randomWord.length();
 
-        this.partialSolution = new ArrayList<>(length);
-        for (int i = 0; i < length; i++) {
+        // 2) Filter to only words of that length.
+        this.candidates = new ArrayList<>();
+        for (String w : wordList) {
+            if (w.length() == chosenLength) {
+                candidates.add(w);
+            }
+        }
+
+        // 3) Initialize the partial solution: "_ _ _ ..."
+        this.partialSolution = new ArrayList<>(chosenLength);
+        for (int i = 0; i < chosenLength; i++) {
             partialSolution.add('_');
         }
-        this.missingChars = length;
+
+        this.missingChars = chosenLength;
     }
 
     public boolean isSolved() {
@@ -49,21 +60,21 @@ public class EvilSolution {
     }
 
     /**
-     * Handles a user's guess in evil fashion.
+     * Processes a user's guess in "evil" fashion.
      *
      * We:
-     *  1. Build word families keyed by pattern (e.g. "_e__") after placing guess.
-     *  2. Choose the family with the largest size.
-     *  3. If there's a tie, choose the family that reveals the fewest NEW letters.
-     *  4. Update candidates and partialSolution.
+     *  1. Partition the candidate words into families based on where 'guess' appears.
+     *  2. Choose the largest family.
+     *  3. Break ties by revealing the fewest new letters.
+     *  4. Update candidates and partialSolution accordingly.
      *
-     * @param guess letter guessed by the user
-     * @return true if the guess reveals at least one new letter, false otherwise
+     * @param guess the character guessed by the user
+     * @return true if at least one new letter is revealed, false otherwise
      */
     public boolean addGuess(char guess) {
         HashMap<String, ArrayList<String>> families = new HashMap<>();
 
-        // Partition current candidates into families.
+        // Build word families keyed by pattern.
         for (String word : candidates) {
             String pattern = buildPattern(word, guess);
             ArrayList<String> family = families.get(pattern);
@@ -74,7 +85,7 @@ public class EvilSolution {
             family.add(word);
         }
 
-        // Choose "best" family: largest size, then fewest new reveals.
+        // Choose best family: largest size, then fewest new reveals.
         String bestPattern = null;
         ArrayList<String> bestFamily = null;
         int bestSize = -1;
@@ -97,27 +108,28 @@ public class EvilSolution {
             }
         }
 
-        // Update candidates to chosen family.
+        // Update candidates to the chosen family.
         candidates = bestFamily;
 
-        // Update partial solution and missingChars based on bestPattern.
-        boolean guessCorrect = bestNewReveals > 0;
-        if (guessCorrect) {
-            for (int i = 0; i < bestPattern.length(); i++) {
-                char c = bestPattern.charAt(i);
-                if (c == guess && partialSolution.get(i) == '_') {
-                    partialSolution.set(i, c);
-                }
-            }
-            missingChars -= bestNewReveals;
+        // If no new positions revealed, guess is "incorrect".
+        if (bestNewReveals == 0) {
+            return false;
         }
 
-        return guessCorrect;
+        // Update partialSolution and missingChars.
+        for (int i = 0; i < bestPattern.length(); i++) {
+            char c = bestPattern.charAt(i);
+            if (c == guess && partialSolution.get(i) == '_') {
+                partialSolution.set(i, c);
+            }
+        }
+        missingChars -= bestNewReveals;
+        return true;
     }
 
     /**
-     * Returns one valid target word consistent with all guesses so far.
-     * Called at the end of the game; any remaining candidate works.
+     * Returns a single target word from the remaining candidates.
+     * Any remaining candidate is valid, since they all match all guesses so far.
      */
     public String getTarget() {
         if (candidates.isEmpty()) {
@@ -127,9 +139,9 @@ public class EvilSolution {
     }
 
     /**
-     * Build a pattern string for a given word and guess, using the current
-     * partialSolution as the base. Positions where the word has 'guess' become
-     * 'guess'; all others stay as in partialSolution.
+     * Builds a pattern string for a candidate word given the current partialSolution
+     * and a guessed character. Positions where the word has 'guess' are filled
+     * with 'guess'; other positions use the already-known character or '_'.
      */
     private String buildPattern(String word, char guess) {
         StringBuilder sb = new StringBuilder(partialSolution.size());
@@ -145,14 +157,12 @@ public class EvilSolution {
     }
 
     /**
-     * Count how many NEW letters would be revealed if we move from the current
-     * partialSolution to this pattern.
+     * Counts how many NEW letters would be revealed by adopting the given pattern.
      */
     private int countNewReveals(String pattern, char guess) {
         int count = 0;
         for (int i = 0; i < pattern.length(); i++) {
-            char c = pattern.charAt(i);
-            if (c == guess && partialSolution.get(i) == '_') {
+            if (pattern.charAt(i) == guess && partialSolution.get(i) == '_') {
                 count++;
             }
         }
