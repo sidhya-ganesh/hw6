@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fc9f74b4-e7f4-488c-b427-48cb66b7d45c" name="Changes" comment="Imported Starter Files &amp; Linked Intellij Project to Git Remote Repository">
-      <change afterPath="$PROJECT_DIR$/src/EvilHangman.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="fc9f74b4-e7f4-488c-b427-48cb66b7d45c" name="Changes" comment="Added and completed EvilSolution.java">
+      <change afterPath="$PROJECT_DIR$/src/EvilSolutionTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +76,23 @@
       <option name="project" value="LOCAL" />
       <updated>1764180262067</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Added and completed EvilHangman.java">
+      <option name="closed" value="true" />
+      <created>1764181103596</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1764181103596</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Added and completed EvilSolution.java">
+      <option name="closed" value="true" />
+      <created>1764181205963</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1764181205963</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -93,6 +108,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Imported Starter Files &amp; Linked Intellij Project to Git Remote Repository" />
-    <option name="LAST_COMMIT_MESSAGE" value="Imported Starter Files &amp; Linked Intellij Project to Git Remote Repository" />
+    <MESSAGE value="Added and completed EvilHangman.java" />
+    <MESSAGE value="Added and completed EvilSolution.java" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added and completed EvilSolution.java" />
   </component>
 </project>
