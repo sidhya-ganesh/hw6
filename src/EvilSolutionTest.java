@@ -6,9 +6,7 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
-/**
- * Unit tests for EvilSolution.
- */
+//Unit tests for EvilSolution.java
 public class EvilSolutionTest {
 
     private EvilSolution buildSolution(String... words) {

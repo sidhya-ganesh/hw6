@@ -14,17 +14,12 @@ public class EvilHangman {
     private EvilSolution solution;
     private Scanner inputReader;
 
-    /**
-     * Default constructor – uses the same dictionary file as the original Hangman.
-     */
+    //Default constructor – uses the same dictionary file as the original Hangman
     public EvilHangman() {
         this("engDictionary.txt");
     }
 
-    /**
-     * Main constructor that mirrors Hangman(String filename), but sets up
-     * an EvilSolution instead of a fixed Solution.
-     */
+    // Main constructor that mirrors Hangman(String filename), but sets up an EvilSolution instead of a fixed Solution
     public EvilHangman(String filename) {
         try {
             wordList = dictionaryToList(filename);
@@ -33,17 +28,17 @@ public class EvilHangman {
                     "Couldn't read from the file %s. Verify that you have it in the right place and try running again.",
                     filename);
             e.printStackTrace();
-            System.exit(0); // stop the program--no point in trying if you don't have a dictionary
+            System.exit(0); // stop the program--bc theres no point trying if you don't have a dictionary
         }
 
         previousGuesses = new HashSet<>();
         incorrectGuesses = new TreeSet<>();
 
-        // Choose a random word just to decide the length we will play with.
+        // Choose random word just to decide the length we will play with
         int randomIndex = new Random().nextInt(wordList.size());
         int targetLength = wordList.get(randomIndex).length();
 
-        // Collect all words of that length to form the initial evil candidate pool.
+        // Collect all the words of that length to form initial evil candidate pool
         ArrayList<String> candidates = new ArrayList<>();
         for (String word : wordList) {
             if (word.length() == targetLength) {
@@ -55,17 +50,15 @@ public class EvilHangman {
         inputReader = new Scanner(System.in);
     }
 
-    /**
-     * Extra constructor used for unit testing: lets tests pass a custom dictionary
-     * and Scanner. Here we simply use the length of the first word as the
-     * target length to keep behavior deterministic for tests.
-     */
+    // Extra constructor used for unit testing: lets tests pass a custom dictionary and Scanner
+    // Here we simply use the length of the first word as the target length to keep behavior deterministic for tests
+
     public EvilHangman(ArrayList<String> dictionary, Scanner input, Random random) {
         this.wordList = new ArrayList<>(dictionary);
         this.previousGuesses = new HashSet<>();
         this.incorrectGuesses = new TreeSet<>();
 
-        int targetLength = wordList.get(0).length(); // deterministic for tests
+        int targetLength = wordList.get(0).length(); // imp for tests
 
         ArrayList<String> candidates = new ArrayList<>();
         for (String word : wordList) {
@@ -126,9 +119,9 @@ public class EvilHangman {
             wordList.add(fileReader.next());
         }
 
-        // Starter code didn't close these; behavior is identical either way.
-        // fileReader.close();
-        // fileInput.close();
+        // Starter code didn't close these - and the behavior is identical either way.
+        // fileReader.close(); so we dont need this
+        // fileInput.close();  or this
 
         return wordList;
     }

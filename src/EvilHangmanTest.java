@@ -9,9 +9,7 @@ import java.util.Scanner;
 
 import static org.junit.Assert.*;
 
-/**
- * Tests for EvilHangman.start(), focusing on user I/O behavior.
- */
+// tests for EvilHangman.start() which focus on the I/O behavior.
 public class EvilHangmanTest {
 
     private EvilHangman buildGame(String dictionaryWord, String simulatedInput) {
